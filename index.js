@@ -1,26 +1,18 @@
-const express = require('express');
-const Todo = require('./models/todo');
-require('./config/config')
+const express = require('express')
 const app = express();
+const port = 4500;
+const cors = require('cors')
+require('./config/config')
+
+app.use(cors({
+  origin : 'http://localhost:5173'
+}));
 
 app.use(express.json());
 
-const port = 4500;
+const todoRouter = require('./routers/router')
 
-app.post('/api/v1/todo',(req,res)=>{
-
-  const text = req.body.text;
-  const todo = new Todo({
-    text
-  })
-  todo.save()
-
-res.json({
-  todo:todo
-})
-
-})
-
+app.use('/api', todoRouter)
 
 
 app.listen(port, () => {
